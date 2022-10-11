@@ -1,0 +1,221 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Oct  6 13:10:30 2022
+
+@author: yannick
+NB : this is a very bold code that requires good wifi connection. 
+"""
+
+import yagmail
+import time
+
+def listcreat(text):
+    liste = []
+    n = 0
+    for i in range (0,len(text)-1):
+        if text[i]=="ü":
+            text = text[0:i]+"u"+text[i+1:len(text)]
+        if text[i]=="é":
+            text = text[0:i]+"e"+text[i+1:len(text)]
+        if text[i]=="í":
+            text = text[0:i]+"i"+text[i+1:len(text)]
+        if text[i]=="è":
+            text = text[0:i]+"e"+text[i+1:len(text)]            
+        if text[i+1]=="\n" or text[i+1]==",":
+            string = text[n:i+1]
+            string = string.lower()
+            if text[n-1] == ",":
+                string = string[1:len(string)]
+            liste.append(string)
+            n = i+2
+    return liste
+
+PRENOMS = """Emilia, Emilya, Emylia
+Mila
+Mia, Mía
+Sophie, Sofie
+Sophia, Sofia
+Lilly, Lilli, Lillie, Lily
+Lia, Liah, Liya, Lya, Lía, Lïa
+Emma
+Emily, Emilie
+Amelie
+Ella
+Maya, Maja
+Hannah, Hanna
+Matilda, Mathilda, Matthilda
+Leni
+Malia, Maliah, Maliya, Malya
+Lina
+Clara, Klara
+Charlotte
+Luna
+Frida, Frieda
+Lea
+Ida
+Amelia
+Zoe
+Eléa, Élea
+Isabella
+Luisa, Louisa
+Lotta
+Leonie, Leoni
+Liana, Lyana
+Mina
+Carlotta
+Nora
+Elena
+Thea
+Olivia
+Mira
+Marie
+Lena
+Laila
+Elisa
+Elina
+Anna
+Juna, Yuna
+Ava
+Tilda
+Lara
+Karlie
+Sarah
+Noah, Noa
+Luca, Louca, Luka
+Charlie, Charli, Charly
+Elia, Eliya, Elya, Elyah
+Lou, Lu
+Kaya
+Mika, Mica, Mikah
+Leo
+Romy
+Junis
+Jona, Yona
+Aria, Arya
+Juri, Yuri
+Milou
+Lynn, Lin, Lyn
+Tom
+Toni, Tony
+Lian, Lyan
+Bente
+Samy, Samie, Sammy
+Noe
+Marlo
+Alva
+Yannick, Yannic, Yannik, Janick, Jannick, Jannik, Jannic
+Robin
+Niki, Nicki
+Nala
+Loki
+Mio
+Ryan
+Merle
+Noam
+Sky
+Mattis
+Tayo
+Nori
+Hunter
+Nino
+Lori, Lory
+Noel
+Sam
+Jule
+Fredy, Freddi, Freddie, Freddy
+Nika
+Eli
+Marlin
+Jesse
+Jayden, Jaden
+Jora, Jorah
+Maxi
+"""
+
+NOMS = """Abicht
+Ackermann
+Albrecht
+Angerer
+Anhalt
+Anschütz
+Armbruster
+Auernheimer
+Auffenberg
+Auscher
+Axenfeld
+Blumhardt
+Bochmann
+Boes
+Bohlen
+Böhler
+Böhm
+Böhmer
+Bohringer
+Bollinger
+Borchers
+Bornemann
+Börner
+Borrmann
+Bosch
+Bothe
+Bottmann
+Brach
+Brauner
+Brehm
+Breitman
+Brockhaus
+Bruckmann
+Bruhns
+Brunckhorst
+Brunke
+Bruns
+Buch
+Buchmann
+Buchsbaum
+Buchwieser
+Bucksbaum
+Burchardt
+Burckhardt
+Burgmüller
+Burkhardt
+Buschbaum
+Buxbaum
+Cantor
+Carius
+Cloos
+Cohn
+Cohn-Bendit
+Cremer
+Curtz
+"""
+
+prenoms = listcreat(PRENOMS)
+noms = listcreat(NOMS)
+email = []
+
+for i in range(30,len(prenoms)):       #entrain de faire de 0 à 10
+    for j in range(0,len(noms)):      #fait de 0 à len
+        mail = prenoms[i]+"."+noms[j]+"@gmail.com"
+        email.append(mail)
+
+
+user = 'my@email'
+app_password = 'donteventry' # a token for gmail
+subject = 'the subject'
+
+content = """
+Your email
+"""
+
+k = 0
+while k < len(email):
+    to = email[k]
+    try :
+        with yagmail.SMTP(user, app_password) as yag:
+            yag.send(to, subject, content)
+            print('Sent email successfully   '+str(round(100*k/len(email),3))+"%")
+            k+=1
+    except :
+        print('sending fail')
+        k+=1
